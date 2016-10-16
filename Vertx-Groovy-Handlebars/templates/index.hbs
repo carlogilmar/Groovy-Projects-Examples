@@ -1,0 +1,72 @@
+<html>
+<head>
+  <title>Hello Handlebars</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+<script>
+  tinymce.init({
+  selector: 'textarea',
+  height: 500,
+  toolbar: 'mybutton | mybutton2 | mybutton3',
+  menubar: false,
+  setup: function (editor) {
+
+       editor.addButton('mybutton', {
+      text: 'Add Client Name',
+      icon: false,
+      onclick: function () {
+        editor.insertContent('&nbsp;<b> \{\{nombre_cliente\}\} </b>&nbsp;');
+      }
+    });
+
+     editor.addButton('mybutton2', {
+      text: 'Add Company',
+      icon: false,
+      onclick: function () {
+        editor.insertContent('&nbsp;<b> \{\{nombre_empresa\}\} </b>&nbsp;');
+      }
+    });
+
+      editor.addButton('mybutton3', {
+      text: 'Add Sender',
+      icon: false,
+      onclick: function () {
+        editor.insertContent('&nbsp;<b> \{\{sender\}\} </b>&nbsp;');
+      }
+    });
+
+
+  },
+
+  content_css: [
+    '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+    '//www.tinymce.com/css/codepen.min.css'
+  ]
+});
+</script>
+
+</head>
+<body>
+
+<textarea>
+  <h1> Haciendo lectura en Json: Hola -----------------{{name}}!!!!!!!!!</h1><br>
+
+  <strong> Today is:::::{{day}} </strong>
+  <br>
+
+  Key2: <h3> {{key2}}</h3>
+  <br>
+
+  Message: <b>{{mess}}<b>
+  <br><br>
+
+  Key1: <small>{{key1}}</small>
+
+</textarea>
+
+
+</body>
+</html>
+
+

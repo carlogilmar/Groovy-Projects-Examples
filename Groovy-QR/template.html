@@ -1,0 +1,258 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"></meta>
+    <title>Invoice</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed' rel='stylesheet' type='text/css'>
+    </link>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      td.border-lb{
+        border: 1px solid #ccc;
+        border-width: 0 5px 0 0;
+        padding: 5px;
+          text-align: right;
+      }
+      td.client {
+        border: 2px solid #ccc;
+        background-color: rgb(238,238,238);
+          padding: 5px;
+      }
+      
+      td.desc {
+        border: 2px solid #E6E6E6;
+          
+      }
+
+      .text-right{
+        text-align: right;
+      }
+      
+      hr { 
+        height:3px; 
+        border:none; 
+        background-color:#A4A4A4; 
+      }
+
+    thead > tr > td {
+        background-color: #045FB4;
+        color: white; 
+        text-align: center;
+        border:0;
+      }
+
+   
+
+
+    </style>
+  </head>
+
+  <body>
+
+    <table width="100%">
+      <tr>
+        <td>
+          <h4>
+            INTEGRADORA DE EMPRENDIMIENTOS CULTURALES S.A de C.V<br/>
+            <small>IEC121203FV8</small>
+          </h4>
+
+          <p>
+          <strong>
+            <%
+           print emisor.datosFiscales.calle
+           print ", No. ${emisor.datosFiscales.noExterior}, Int. ${emisor.datosFiscales.noInterior}"
+           print "<br/>"
+           print "${emisor.datosFiscales.colonia} ${emisor.datosFiscales.delegacion}"
+           print "<br/>"
+           print emisor.datosFiscales.ciudad
+           print "<br/>"
+           print "${emisor.datosFiscales.pais}, ${emisor.datosFiscales.codigoPostal}"
+           %>
+          </strong>
+          <br><br>
+          </p>
+        </td>
+        <td class="border-lb">
+
+          <small><strong>Ingreso</strong></small><br/><br/>
+          <small>Folio:<%= datosDeFacturacion.folio %></small><br/>
+          <small><%= fechaDeCreacion %></small><br/>
+          <small><%= horaDeCreacion %></small><br/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table width="100%">
+            <tr>
+              <td class="client">
+                <p>
+                <%
+                  if (betweenintegrated) {
+                  print emisor.datosfiscales.calle
+                  print ", no. ${emisor.datosfiscales.noexterior}, int. ${emisor.datosfiscales.nointerior}"
+                  print "<br/>"
+                  print "${emisor.datosfiscales.colonia} ${emisor.datosfiscales.delegacion}"
+                  print "<br/>"
+                  print emisor.datosfiscales.ciudad
+                  print "<br/>"
+                  print "${emisor.datosfiscales.pais}, ${emisor.datosfiscales.codigopostal}"
+                  } else {
+                  print receptor.datosfiscales.razonsocial
+                  print "<br />"
+                  print receptor.datosfiscales.rfc
+                  print "<br />"
+                  print receptor.datosfiscales.calle
+                  print "<br />"
+                  print "${receptor.datosfiscales.delegacion} ${receptor.datosfiscales.codigopostal}"
+                  }
+                  %>
+
+                </p>
+              </td>
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+
+    <br><br>
+    <div class="container">
+
+    <table>
+    
+      <thead>
+        <tr>
+          <td>
+          Cantidad
+          </td>
+          <td >
+          Unidad
+          </td>
+          <td>
+          Descripción
+          </td>
+          <td>
+          Precio Unitario
+          </td>
+          <td>
+          Importe
+          </td>
+          <td>
+          IVA
+          </td>
+          <td>
+          Monto(IVA)
+          </td>
+        </tr>
+      </thead>
+
+    <tbody>
+    <%
+    conceptos.each {
+      print "<tr>"
+        print "<td class="desc"> ${it.cantidad} </td>"
+        print "<td class='text-right desc'> ${it.unidad} </td>"
+        print "<td class='desc'> ${it.descripcion} </td>"
+        print "<td class='text-right desc'> \$ ${it.valorUnitario} </td>"
+        print "<td class='text-right desc'> 000.00 </td>"  
+        print "<td class='text-right desc'> ${impuestos.find{ it.impuesto.equals("IVA")}.tasa}% </td>"
+        print "<td class='text-right desc'> \$ ${it.valorUnitario * it.cantidad * impuestos.find{ it.impuesto.equals("IVA")}.tasa / 100} </td>"
+
+        print "</tr>"
+    }
+    %>
+    </tbody>
+    </table>
+
+
+    <div class="text-right">
+    <div class="col-xs-2 col-xs-offset-8">
+    <p class="right">
+    <strong>
+    Subtotal : <br/>
+    Impuestos : <br/>
+    Total : <br/>
+    </strong>
+    </p>
+    </div>
+    <div class="col-xs-2">
+    <strong>
+    <%
+    def subTotal = conceptos.sum(0) { it.valorUnitario * it.cantidad }
+    def totalImpuestos = impuestos.sum(0) { it.importe.toBigDecimal() }
+    print "\$ ${subTotal}"
+    print "<br />"
+    print "\$ ${totalImpuestos}"
+    print "<br />"
+    print "\$ ${subTotal + totalImpuestos}"
+    print "<br />"
+    %>
+    </strong>
+    </div>
+    </div>
+
+    <div class="row">
+    <strong>Importe con letra:</strong><% print cantidadEnLetras %> 
+    
+    </div>
+    
+    <div class="row">
+    <%
+    println """Forma de pago : ${datosDeFacturacion.formaDePago} - Método de pago : ${datosDeFacturacion.metodoDePago}, - No. de cuenta : ${datosDeFacturacion.numeroDeCuentaDePago}, Lugar de expedición : ${datosDeFacturacion.lugarDeExpedicion}, Régimen General de ley Personas Morales ${datosDeFacturacion.addendaLabel} """ %>
+    </div>
+
+    <br>
+    <hr>
+    <br>
+
+  <table width=100%>
+    <tr>
+    <td width="10%">&nbsp;</td>
+
+      <td align=left>
+        <strong>Folio fiscal:</strong><% print datosDeFacturacion.uuid %>
+        <br/>
+        <strong>No. de serie del CSD del emisor:</strong><% print emisorCSD %>
+        <br/>
+        <strong>Fecha y Hora de Certificación:</strong><% print fechaDeCertificacion %>
+        <br/>
+        <strong>Fecha y Hora de Emisión:</strong><% print fechaDeEmision %>
+        <br/>
+        <strong>No. de serie del CSD del SAT:</strong><% print selloSAT.split("(?<=\\G.{90})").join("<br/>") %>
+        <br/>
+     </td>
+
+      <td width="20%" align=center> <img src="QR.png" /></td>
+  </tr>
+  <tr>
+      <td colspan="3">
+        <small>Sello CFDI:
+        <% print selloCFDI.split("(?<=\\G.{90})").join("<br/>") %></small>
+        <br/>
+        <small>Cadena Original de Complemento de Certificación digital del SAT:
+        <% print complementoSAT.split("(?<=\\G.{90})").join("<br/>") %></small>
+        <br/>
+        <small>Sello SAT:<<% print certificadoSAT %>/small>
+        <br/>
+      </td>
+  </tr>
+</table>
+  
+
+    <p align=right>
+    <strong>Este documento es una representación impresa del CFDI</strong>
+    </p>
+
+
+    <br/><br/>
+    
+    </div>
+</body>
+</html>
+
