@@ -2,20 +2,6 @@ import io.vertx.groovy.ext.unit.TestSuite
 import io.vertx.groovy.core.Vertx
 import io.vertx.groovy.core.http.HttpClient
 
-/***********************************
-
-First: Run webserver
-Then: Tun test.groovy
-
-************************************/
-
-/*
-//Adaptar la configuración externalizada
-def config = Vertx.currentContext().config()
-  opt =[
-  "config":config
-  ]
-*/
 
 //Configuración para la TestSuite
 def options = [
@@ -27,28 +13,6 @@ def options = [
 
 //Create TestSuite
 def suite = TestSuite.create("the_test_suite")
-
-//Deploy webserver
-/*
-suite.before({ context ->
-  vertx.deployVerticle("webserver.groovy",opt)
-})
-*/
-
-
-//--------------------------------- Start TestCase
-//suite.test("counterTest", { context ->
-//  // Send a request and get a response
-//  def client = vertx.createHttpClient()
-//  def async = context.async()
-//  client.getNow(8080, "localhost", "/countTotal", { resp ->
-//    resp.bodyHandler({ body ->
-//      context.assertEquals("22", body.toString("UTF-8"))
-//    })
-//    client.close()
-//    async.complete()
-//  })
-//})
 
 suite.before({ context ->
   def async = context.async()
@@ -98,6 +62,4 @@ suite.before({ context ->
 //Run Suite
 def completion = suite.run(options)
 
-// Wait until the test suite completes
-//completion.await()
-//completion.awaitSuccess()
+
