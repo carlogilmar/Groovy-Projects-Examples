@@ -1,13 +1,38 @@
+import io.vertx.groovy.ext.web.Router
 def server = vertx.createHttpServer()
 
-server.requestHandler({ request ->
+def router = Router.router(vertx)
 
-    // This handler gets called for each request that arrives on the server
-    def response = request.response()
-      response.putHeader("content-type", "text/plain")
-
-        // Write to the response and end it
-        response.end("Hello World!")
+router.route("/hello").handler({ routingContext ->
+  // This handler will be called for every request
+  def response = routingContext.response()
+  response.putHeader("content-type", "text/plain")
+  // Write to the response and end it
+  response.end("Hello World from Vert.x-Web!")
 })
 
-server.listen(8080)
+router.route("/counter").handler({ routingContext ->
+  // This handler will be called for every request
+  def response = routingContext.response()
+  response.putHeader("content-type", "text/plain")
+  // Write to the response and end it
+  response.end("10")
+})
+
+router.route("/vertx").handler({ routingContext ->
+  // This handler will be called for every request
+  def response = routingContext.response()
+  response.putHeader("content-type", "text/plain")
+  // Write to the response and end it
+  response.end("Vertx groovy")
+})
+
+router.route("/version").handler({ routingContext ->
+  // This handler will be called for every request
+  def response = routingContext.response()
+  response.putHeader("content-type", "text/plain")
+  // Write to the response and end it
+  response.end("3.3.3")
+})
+
+server.requestHandler(router.&accept).listen(8080)
