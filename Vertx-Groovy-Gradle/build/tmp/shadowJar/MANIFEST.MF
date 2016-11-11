@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: io.vertx.example.HelloWorldEmbedded
+Main-Verticle: groovy:MyGroovyVerticle
+Main-Class: io.vertx.core.Launcher
 
