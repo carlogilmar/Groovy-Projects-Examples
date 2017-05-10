@@ -24,7 +24,7 @@ def authProvider = ShiroAuth.create(vertx, ShiroAuthRealmType.PROPERTIES, [:])
 router.route().handler(UserSessionHandler.create(authProvider))
 
 // Any requests to URI starting '/private/' require login
-router.route("/private/*").handler(RedirectAuthHandler.create(authProvider, "/loginpage.html"))
+router.route("/private/*").handler(RedirectAuthHandler.create(authProvider, "/static/loginpage.html"))
 
 // Serve the static private pages from directory 'private'
 router.route("/private/*").handler(StaticHandler.create().setCachingEnabled(false).setWebRoot("private"))
