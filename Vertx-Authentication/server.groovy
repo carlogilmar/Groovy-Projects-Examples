@@ -37,7 +37,7 @@ router.route("/loginhandler").handler(FormLoginHandler.create(authProvider))
 router.route("/logout").handler({ context ->
   context.clearUser()
   // Redirect back to the index page
-  context.response().putHeader("location", "/").setStatusCode(302).end()
+  context.response().putHeader("location", "/static/").setStatusCode(302).end()
 })
 
 // Serve the non private static pages
